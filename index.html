@@ -12,7 +12,7 @@
 <body>
     <h1>Organizador de Horarios</h1>
 
-    <table id="horariosTabla" class="table">
+    <table id="horariosTabla" class="table table-primary table-striped-columns">
         <thead>
             <tr>
                 <th scope="col">#</th>
@@ -128,21 +128,21 @@
 
 
 
-    <h1>Editor de Asignaturas</h1>
+   
     <!-- formulario de asignaturas -->
 
-
+<div class="container"> <h1>Editor de Asignaturas</h1>
     <form onsubmit="agregarAsignatura(event)">
-
-        <div class="mb-3">
-            <label for="seccion">Sección:</label>
-            <input type="text" id="seccion" required>
-        </div>
-        <div class="mb-3">
-            <label for="nombre">Nombre Asignatura:</label>
-            <input type="text" id="nombre" required>
-        </div>
-        <div class="mb-3">
+        <div class="row">
+            <div class="col mb-3">
+                <label for="seccion">Sección:</label><br>
+                <input type="text" id="seccion" required>
+            </div>
+            <div class="col mb-3">
+                <label for="nombre">Nombre Asignatura:</label><br>
+                <input type="text" id="nombre" required>
+            </div>
+            <div class="col mb-3">
             <label for="horario">Horario:</label>
             <select id="horario" required>
                 <option value="" disabled selected>Seleccione</option>
@@ -161,18 +161,24 @@
                 <option value="16:41-17:20">16:41-17:20</option>
             </select>
         </div>
-        <div class="mb-3">
-            <label for="sala">Sala:</label>
+        <div class="col mb-3">
+            <label for="sala">Sala:</label><br>
             <input type="text" id="sala" required>
         </div>
-        <div class="mb-3">
-            <label for="profesor">Profesor:</label>
+        <div class="col mb-3">
+            <label for="profesor">Profesor:</label><br>
             <input type="text" id="profesor" required>
         </div>
+            
+        </div>
+        
+        
 
         <button type="submit">Agregar Asignatura</button>
 
     </form>
+</div>
+    
 
 
 
