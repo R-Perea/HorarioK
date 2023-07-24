@@ -161,6 +161,6 @@ function insertarDatosEnTabla(nombre, seccion, horario, sala, profesor, dia) {
         alert('Horario ocupado. No se puede agregar la asignatura en este horario.');
     } else {
         // Si la celda está vacía, insertar los datos de la asignatura
-        cell.textContent = `${nombre}\n${seccion}\n${horario}\n${sala}\n${profesor}`;
+        cell.textContent = `${nombre}\n${seccion}\n${sala}`;
     }
 }
