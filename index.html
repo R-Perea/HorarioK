@@ -27,11 +27,11 @@
         <tbody>
             <tr>
                 <th scope="row">8:31-9:10</th>
-                <td id="l"></td>
-                <td id="m"></td>
-                <td id="mi"></td>
-                <td id="j"></td>
-                <td id="v"></td>
+                <td id="l1"></td>
+                <td id="m1"></td>
+                <td id="mi1"></td>
+                <td id="j1"></td>
+                <td id="v1"></td>
             </tr>
             <tr>
                 <th scope="row">9:11-9:50</th>
@@ -124,61 +124,77 @@
         </tbody>
     </table>
 
+    <button type="button" onclick="limpiarTabla()">Limpiar Tabla</button>
+
+    <button type="button" onclick="generarPDF()">Generar PDF</button>
 
 
 
 
-   
+
+
     <!-- formulario de asignaturas -->
 
-<div class="container"> <h1>Editor de Asignaturas</h1>
-    <form onsubmit="agregarAsignatura(event)">
-        <div class="row">
-            <div class="col mb-3">
-                <label for="seccion">Sección:</label><br>
-                <input type="text" id="seccion" required>
-            </div>
-            <div class="col mb-3">
-                <label for="nombre">Nombre Asignatura:</label><br>
-                <input type="text" id="nombre" required>
-            </div>
-            <div class="col mb-3">
-            <label for="horario">Horario:</label>
-            <select id="horario" required>
-                <option value="" disabled selected>Seleccione</option>
-                <!-- Agregar opciones con id numérico incremental -->
-                <option value="8:31-9:10">8:31-9:10</option>
-                <option value="9:11-9:50">9:11-9:50</option>
-                <option value="10:00-10:40">10:00-10:40</option>
-                <option value="10:41-11:20">10:41-11:20</option>
-                <option value="11:31-12:10">11:31-12:10</option>
-                <option value="12:11-12:50">12:11-12:50</option>
-                <option value="13:01-13:40">13:01-13:40</option>
-                <option value="13:41-14:20">13:41-14:20</option>
-                <option value="14:31-15:10">14:31-15:10</option>
-                <option value="15:11-15:50">15:11-15:50</option>
-                <option value="16:01-16:40">16:01-16:40</option>
-                <option value="16:41-17:20">16:41-17:20</option>
-            </select>
-        </div>
-        <div class="col mb-3">
-            <label for="sala">Sala:</label><br>
-            <input type="text" id="sala" required>
-        </div>
-        <div class="col mb-3">
-            <label for="profesor">Profesor:</label><br>
-            <input type="text" id="profesor" required>
-        </div>
-            
-        </div>
-        
-        
+    <div class="container">
+        <h1>Editor de Asignaturas</h1>
+        <form onsubmit="agregarAsignatura(event)">
+            <div class="row">
+                <div class="col mb-3">
+                    <label for="seccion">Sección:</label><br>
+                    <input type="text" id="seccion" required>
+                </div>
+                <div class="col mb-3">
+                    <label for="nombre">Nombre Asignatura:</label><br>
+                    <select id="nombre" required>
+                        <option value="" selected disabled>Seleccione una opción</option>
+                        <option value="CALIDAD DE SOFTWARE">CALIDAD DE SOFTWARE</option>
+                        <option value="PROGRAMACION APLICACIONES MOVILES">PROGRAMACION APLICACIONES MOVILES</option>
+                        <option value="ARQUITECTURA">ARQUITECTURA</option>
+                        <option value="ESTADISTICA DESCRIPTIVA">ESTADISTICA DESCRIPTIVA</option>
+                        <option value="INGLES INTERMEDIO">INGLES INTERMEDIO</option>
+                        <option value="ETICA PARA EL TRABAJO">ETICA PARA EL TRABAJO</option>
+                        <option value="PROCESO PORTAFOLIO">PROCESO PORTAFOLIO</option>
+                    </select>
+                </div>
+                
 
-        <button type="submit">Agregar Asignatura</button>
+                <div class="col mb-3">
+                    <label for="horario">Horario:</label>
+                    <select id="horario" required>
+                        <option value="" disabled selected>Seleccione</option>
+                        <!-- Agregar opciones con id numérico incremental -->
+                        <option value="8:31-9:10">8:31-9:10</option>
+                        <option value="9:11-9:50">9:11-9:50</option>
+                        <option value="10:00-10:40">10:00-10:40</option>
+                        <option value="10:41-11:20">10:41-11:20</option>
+                        <option value="11:31-12:10">11:31-12:10</option>
+                        <option value="12:11-12:50">12:11-12:50</option>
+                        <option value="13:01-13:40">13:01-13:40</option>
+                        <option value="13:41-14:20">13:41-14:20</option>
+                        <option value="14:31-15:10">14:31-15:10</option>
+                        <option value="15:11-15:50">15:11-15:50</option>
+                        <option value="16:01-16:40">16:01-16:40</option>
+                        <option value="16:41-17:20">16:41-17:20</option>
+                    </select>
+                </div>
+                <div class="col mb-3">
+                    <label for="sala">Sala:</label><br>
+                    <input type="text" id="sala" required>
+                </div>
+                <div class="col mb-3">
+                    <label for="profesor">Profesor:</label><br>
+                    <input type="text" id="profesor" required>
+                </div>
 
-    </form>
-</div>
-    
+            </div>
+
+
+
+            <button type="submit">Agregar Asignatura</button>
+
+        </form>
+    </div>
+
 
 
 
@@ -188,11 +204,9 @@
             <!-- Aquí se mostrarán las asignaturas guardadas -->
         </div>
     </div>
-    
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"
-        integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz"
-        crossorigin="anonymous"></script>
 
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz"crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="script.js"></script>
 </body>
 

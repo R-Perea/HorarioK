@@ -164,3 +164,58 @@ function insertarDatosEnTabla(nombre, seccion, horario, sala, profesor, dia) {
         cell.textContent = `${nombre}\n${seccion}\n${sala}`;
     }
 }
+
+function limpiarTabla() {
+    const celdas = document.querySelectorAll("#horariosTabla tbody td");
+    celdas.forEach((celda) => {
+        celda.textContent = "";
+    });
+}
+
+function generarPDF() {
+    const header = "Horarios";
+    const table = document.getElementById("horariosTabla");
+  
+    // Crea un nuevo documento para imprimir
+    const printWindow = window.open('', '', 'width=800,height=600');
+    printWindow.document.write(`
+      <html>
+      <head>
+        <title>${header}</title>
+        <style>
+          table {
+            border-collapse: collapse;
+            width: 100%;
+          }
+          th, td {
+            border: 1px solid black;
+            padding: 8px;
+            text-align: center;
+          }
+          th {
+            background-color: #f2f2f2;
+          }
+        </style>
+      </head>
+      <body>
+        <h3 style="text-align: center">${header}</h3>
+        ${table.outerHTML}
+      </body>
+      </html>
+    `);
+  
+    // Espera a que el contenido se cargue antes de imprimir
+    printWindow.document.addEventListener('DOMContentLoaded', () => {
+      // Llama a la función window.print() para abrir la ventana de impresión
+      printWindow.print();
+      printWindow.close();
+    });
+}
+
+  
+  
+
+
+  
+  
+  
