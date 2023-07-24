@@ -154,5 +154,13 @@ function insertarDatosEnTabla(nombre, seccion, horario, sala, profesor, dia) {
     console.log("Dia:", dia, "Row Number:", rowNumber);
     const cell = document.getElementById(`${dia}${rowNumber}`);
     console.log("Cell:", cell);
-    cell.textContent = `${nombre}\n${seccion}\n${horario}\n${sala}\n${profesor}`;
+
+    // Verificar si la celda ya está ocupada
+    if (cell.textContent.trim() !== '') {
+        // Si la celda tiene contenido, mostrar una alerta o mensaje de horario ocupado
+        alert('Horario ocupado. No se puede agregar la asignatura en este horario.');
+    } else {
+        // Si la celda está vacía, insertar los datos de la asignatura
+        cell.textContent = `${nombre}\n${seccion}\n${horario}\n${sala}\n${profesor}`;
+    }
 }
