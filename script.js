@@ -1,170 +1,14 @@
-
 // Definir la lista de días fuera de la función crearCardAsignatura
 const diasSemana = ['l', 'm', 'mi', 'j', 'v'];
 
-function crearCardAsignatura(id, seccion, nombre, horario, sala, profesor) {
-    console.log(id, seccion, nombre, horario, sala, profesor);
-    const card = document.createElement('div');
-    card.classList.add('card');
-    card.setAttribute('data-id', id); // Agregar el id como atributo personalizado
-    card.innerHTML = `
-            <div class="card-body">
-            <h5 class="card-title">${nombre}</h5>
-            <p class="card-text">
-                Sección: ${seccion}<br>
-                Horario: ${horario}<br>
-                Sala: ${sala}<br>
-                Profesor: ${profesor}<br>
-                Día: ${dia} <!-- Agregar el día -->
-            </p>
-        </div>          
-        <div class="buttons-container">
-        <!-- Botones de los días -->
-            ${diasSemana.map(dia => `<button class="btn btn-primary" onclick="asignarDatos('${nombre}', '${seccion}', '${horario}', '${sala}', '${profesor}', '${dia}')">${dia.charAt(0).toUpperCase() + dia.slice(1)}</button>`).join('')}
-            <button type="button" class="btn btn-danger" onclick="eliminarAsignatura(${id})">Eliminar</button>
-        </div>
-        `;
-    return card;
-}
-
-
-
-let asignaturaActual = null;
-
-
-function agregarAsignatura(event) {
-    event.preventDefault();
-
-    const seccion = document.getElementById("seccion").value;
-    const nombre = document.getElementById("nombre").value;
-    const horario = document.getElementById("horario").value;
-    const sala = document.getElementById("sala").value;
-    const profesor = document.getElementById("profesor").value;
-
-    // Crear la asignatura
-    const asignatura = {
-        id: Date.now(),
-        seccion: seccion,
-        nombre: nombre,
-        horario: horario,
-        sala: sala,
-        profesor: profesor
-    };
-
-    // Almacenar la asignatura en la variable global
-    asignaturaActual = asignatura;
-
-    // Limpiar los campos del formulario
-    document.getElementById("seccion").value = "";
-    document.getElementById("nombre").value = "";
-    document.getElementById("horario").value = "";
-    document.getElementById("sala").value = "";
-    document.getElementById("profesor").value = "";
-
-    const card = crearCardAsignatura(asignatura); // Pasamos el objeto 'asignatura' directamente
-
-    // Agregar la card al contenedor de asignaturas guardadas
-    const asignaturasGuardadasDiv = document.getElementById('asignaturasGuardadas');
-    asignaturasGuardadasDiv.appendChild(card);
-
-    // Guardar la asignatura en el LocalStorage
-    guardarAsignatura(asignatura); // Pasamos el objeto 'asignatura' directamente
-}
-
-
-
-function guardarAsignatura(asignatura) {
-    let asignaturasGuardadas = JSON.parse(localStorage.getItem('asignaturas')) || [];
-    asignaturasGuardadas.push(asignatura);
-    localStorage.setItem('asignaturas', JSON.stringify(asignaturasGuardadas));
-
-    // Cargar las asignaturas guardadas nuevamente
-    cargarAsignaturasGuardadas();
-}
-
-function cargarAsignaturasGuardadas() {
-    const asignaturasGuardadas = JSON.parse(localStorage.getItem('asignaturas')) || [];
-
-    const asignaturasGuardadasDiv = document.getElementById('asignaturasGuardadas');
-    asignaturasGuardadasDiv.innerHTML = '';
-
-    for (const asignatura of asignaturasGuardadas) {
-        const card = crearCardAsignatura(asignatura.id, asignatura.seccion, asignatura.nombre, asignatura.horario, asignatura.sala, asignatura.profesor);
-        asignaturasGuardadasDiv.appendChild(card);
-    }
-    // Agregar atributo data-dia a los botones de cada card
-    const buttonsContainers = asignaturasGuardadasDiv.querySelectorAll('.buttons-container');
-    for (const buttonsContainer of buttonsContainers) {
-        for (let i = 0; i < buttonsContainer.children.length; i++) {
-            const button = buttonsContainer.children[i];
-            const dia = diasSemana[i];
-            button.setAttribute('data-dia', dia);
-        }
-    }
-}
-
-function eliminarAsignatura(id) {
-    // Eliminar la card del DOM
-    const asignaturasGuardadasDiv = document.getElementById('asignaturasGuardadas');
-    const cardToRemove = asignaturasGuardadasDiv.querySelector(`[data-id="${id}"]`);
-    if (cardToRemove) {
-        cardToRemove.remove();
-
-        // Eliminar la asignatura del LocalStorage
-        let asignaturasGuardadas = JSON.parse(localStorage.getItem('asignaturas')) || [];
-        asignaturasGuardadas = asignaturasGuardadas.filter(asignatura => asignatura.id !== id);
-        localStorage.setItem('asignaturas', JSON.stringify(asignaturasGuardadas));
-    }
-}
-
-function asignarDatos(nombre, seccion, horario, sala, profesor, dia) {
-    insertarDatosEnTabla(nombre, seccion, horario, sala, profesor, dia);
-}
-
-
-
-
-document.addEventListener('DOMContentLoaded', cargarAsignaturasDesdeExcel);
-
-
-function calcularFilaPorHorario(horario) {
-    // Agregamos los horarios y sus filas correspondientes en un objeto
-    const horariosFila = {
-        '8:31-9:10': 1,
-        '9:11-9:50': 2,
-        '10:00-10:40': 3,
-        '10:41-11:20': 4,
-        '11:31-12:10': 5,
-        '12:11-12:50': 6,
-        '13:01-13:40': 7,
-        '13:41-14:20': 8,
-        '14:31-15:10': 9,
-        '15:11-15:50': 10,
-        '16:01-16:40': 11,
-        '16:41-17:20': 12,
-    };
-
-    // Buscar el horario en el objeto y obtener el número de fila
-    const fila = horariosFila[horario];
-    return fila;
-}
-
-function insertarDatosEnTabla(nombre, seccion, horario, sala, profesor, dia) {
-    // En lugar de buscar las celdas por id, utiliza el día y el número de fila para determinar la celda
-    const rowNumber = calcularFilaPorHorario(horario);
-    console.log("Dia:", dia, "Row Number:", rowNumber);
-    const cell = document.getElementById(`${dia}${rowNumber}`);
-    console.log("Cell:", cell);
-
-    // Verificar si la celda ya está ocupada
-    if (cell.textContent.trim() !== '') {
-        // Si la celda tiene contenido, mostrar una alerta o mensaje de horario ocupado
-        alert('Horario ocupado. No se puede agregar la asignatura en este horario.');
-    } else {
-        // Si la celda está vacía, insertar los datos de la asignatura
-        cell.textContent = `${nombre}\n${seccion}\n${sala}`;
-    }
-}
+// Crear un objeto para mapear los días completos del Excel a los días abreviados
+const diasMap = {
+    "Lunes": "l",
+    "Martes": "m",
+    "Miércoles": "mi",
+    "Jueves": "j",
+    "Viernes": "v"
+};
 
 function limpiarTabla() {
     const celdas = document.querySelectorAll("#horariosTabla tbody td");
@@ -214,6 +58,65 @@ function generarPDF() {
 }
 
 
+document.addEventListener('DOMContentLoaded', cargarAsignaturasDesdeExcel);
+
+
+function calcularFilaPorHorario(horario) {
+    // Agregamos los horarios y sus filas correspondientes en un objeto
+    const horariosFila = {
+        '8:31-9:10': 1,
+        '9:11-9:50': 2,
+        '10:01-10:40': 3,
+        '10:41-11:20': 4,
+        '11:31-12:10': 5,
+        '12:11-12:50': 6,
+        '13:01-13:40': 7,
+        '13:41-14:20': 8,
+        '14:31-15:10': 9,
+        '15:11-15:50': 10,
+        '16:01-16:40': 11,
+        '16:41-17:20': 12,
+        '17:31-18:10': 13
+    };
+
+    const horariosFilaRango = [
+        { inicio: '8:31-9:10', fin: '9:11-9:50', filaInicio: 1, filaFin: 2 },
+        { inicio: '10:01-10:40', fin: '10:41-11:20', filaInicio: 3, filaFin: 4 },
+        { inicio: '11:31-12:10', fin: '12:11-12:50', filaInicio: 5, filaFin: 6 },
+        { inicio: '13:01-13:40', fin: '13:41-14:20', filaInicio: 7, filaFin: 8 },
+        { inicio: '14:31-15:10', fin: '15:11-15:50', filaInicio: 9, filaFin: 10 },
+        { inicio: '16:01-16:40', fin: '16:41-17:20', filaInicio: 11, filaFin: 12 },
+        { inicio: '17:31-18:10', fin: '18:11-18:50', filaInicio: 13, filaFin: 14 }
+    ];
+
+    // Verificar si el horario está en horariosFila
+    if (horario in horariosFila) {
+        return { inicio: horariosFila[horario], fin: horariosFila[horario] };
+    }
+
+    // Si el horario no está en horariosFila, buscamos en horariosFilaRango
+    for (const rango of horariosFilaRango) {
+        const inicio = rango.inicio.substring(0, 5); // Obtener solo la hora de inicio
+        const fin = rango.fin.substring(6); // Obtener solo la hora de fin
+
+        // Verificar si el horario está dentro del rango
+        if (horario >= inicio && horario <= fin) {
+            return { inicio: rango.filaInicio, fin: rango.filaFin };
+        }
+    }
+
+    // Si no se encontró en ningún caso, devolvemos null
+    return null;
+}
+
+
+
+
+
+
+
+
+
 
 function cargarAsignaturasDesdeExcel() {
     const urlArchivo = 'test horario html.xlsx';
@@ -225,24 +128,28 @@ function cargarAsignaturasDesdeExcel() {
             const worksheet = workbook.Sheets[workbook.SheetNames[0]];
             const data = XLSX.utils.sheet_to_json(worksheet);
 
-            // Agrupar las asignaturas por sección
+            // Limpiar el contenedor de asignaturas guardadas
+            const asignaturasGuardadasDiv = document.getElementById('asignaturasGuardadas');
+            asignaturasGuardadasDiv.innerHTML = '';
+
+
+
+            // Objeto para almacenar las asignaturas agrupadas por sección
             const asignaturasPorSeccion = {};
+
+            // Agrupar las asignaturas por sección
             data.forEach(asignatura => {
-                const seccion = asignatura['Sección'];
+                const seccion = asignatura.Sección;
                 if (!asignaturasPorSeccion[seccion]) {
                     asignaturasPorSeccion[seccion] = [];
                 }
                 asignaturasPorSeccion[seccion].push(asignatura);
             });
 
-            // Limpiar el contenedor de asignaturas guardadas
-            const asignaturasGuardadasDiv = document.getElementById('asignaturasGuardadas');
-            asignaturasGuardadasDiv.innerHTML = '';
-
-            // Iterar sobre las secciones y crear las cards para cada sección
+            // Crear las cards por sección y mostrar los días dentro de cada card
             Object.keys(asignaturasPorSeccion).forEach(seccion => {
-                const asignaturasDeSeccion = asignaturasPorSeccion[seccion];
-                const card = crearCardSeccion(seccion, asignaturasDeSeccion);
+                const asignaturas = asignaturasPorSeccion[seccion];
+                const card = crearCardAsignatura(asignaturas); // Solo se pasa una asignatura
                 asignaturasGuardadasDiv.appendChild(card);
             });
         })
@@ -251,23 +158,95 @@ function cargarAsignaturasDesdeExcel() {
         });
 }
 
-function crearCardSeccion(seccion, asignaturas) {
+function crearCardAsignatura(asignaturas) {
     const card = document.createElement('div');
     card.classList.add('card');
+
+    // Construir el contenido de las asignaturas en la card
+    let contenidoTarjeta = '';
+    asignaturas.forEach(asignatura => {
+        // Aquí obtenemos el valor de diaAbreviado usando el objeto diasMap
+        const diaAbreviado = diasMap[asignatura.Día];
+
+        // Eliminar los 3 primeros espacios de asignatura.Horario
+        const horarioSinEspacios = asignatura.Horario.substring(3);
+
+        contenidoTarjeta += `
+            <h5 class="card-title">${asignatura.Asignatura}</h5>
+            <p class="card-text">
+                Sección: ${asignatura.Sección}<br>
+                Horario: ${horarioSinEspacios}<br>
+                Sala: ${asignatura.Sala}<br>
+                Profesor: ${asignatura.Docente}<br>
+                Día: ${asignatura.Día}<br>
+            </p>
+            <div class="buttons-container">
+                <button type="button" class="btn btn-primary" onclick="insertarDatosEnTabla('${asignatura.Asignatura}', '${asignatura.Sección}', '${horarioSinEspacios}', '${asignatura.Sala}', '${diaAbreviado}', '${asignatura.Horario}')">Insertar en Tabla</button>
+            </div>
+        `;
+    });
+
+    // Agregar el contenido de las asignaturas a la card
     card.innerHTML = `
         <div class="card-body">
-            <h5 class="card-title">Sección: ${seccion}</h5>
-            ${asignaturas.map(asignatura => `
-                <p class="card-text">
-                    Asignatura: ${asignatura['Asignatura']}<br>
-                    Horario: ${asignatura['Horario']}<br>
-                    Sala: ${asignatura['Sala']}<br>
-                    Docente: ${asignatura['Docente']}
-                </p>
-            `).join('')}
-        </div>            
+            ${contenidoTarjeta}
+        </div>
     `;
+
     return card;
 }
+
+function insertarDatosEnTabla(nombre, seccion, horarioSinEspacios, sala, diaAbreviado, horarioCompleto) {
+    // Eliminamos los espacios en blanco del horario sin espacios
+    const horarioSinEspaciosSinBlanco = horarioSinEspacios.replace(/\s/g, '');
+
+    const filas = calcularFilaPorHorario(horarioSinEspaciosSinBlanco);
+
+    // Verificar si el horario es un bloque extendido o un rango de bloques
+    if (filas.inicio === 0 && filas.fin === 0) {
+        // Si es un solo bloque, obtenemos la fila de inicio directamente
+        const fila = calcularFilaPorHorario(horarioSinEspacios);
+
+        if (fila === 0) {
+            alert('El horario está fuera del rango especificado. No se puede agregar la asignatura en este horario.');
+            return;
+        }
+
+        const cell = document.getElementById(`${diaAbreviado}${fila}`);
+        
+        if (cell === null) {
+            alert('Error al insertar los datos. La celda no existe.');
+            return;
+        }
+
+        if (cell.textContent.trim() !== '') {
+            alert('Horario ocupado. No se puede agregar la asignatura en este horario.');
+        } else {
+            cell.textContent = `${nombre}\n${seccion}\n${sala}`;
+        }
+    } else {
+        // Si es un horario extendido, iteramos sobre las filas del rango y agregamos en cada una de ellas.
+        for (let fila = filas.inicio; fila <= filas.fin; fila++) {
+            const cell = document.getElementById(`${diaAbreviado}${fila}`);
+
+            if (cell === null) {
+                alert('Error al insertar los datos. La celda no existe.');
+                return;
+            }
+
+            if (cell.textContent.trim() !== '') {
+                alert('Horario ocupado. No se puede agregar la asignatura en este horario.');
+                return; // Salimos del loop si encontramos alguna celda ocupada
+            } else {
+                cell.textContent = `${nombre}\n${seccion}\n${sala}`;
+                console.log(diaAbreviado,fila);
+            }
+        }
+    }
+    
+}
+
+
+
 
 
