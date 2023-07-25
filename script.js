@@ -8,15 +8,16 @@ function crearCardAsignatura(id, seccion, nombre, horario, sala, profesor) {
     card.classList.add('card');
     card.setAttribute('data-id', id); // Agregar el id como atributo personalizado
     card.innerHTML = `
-        <div class="card-body">
+            <div class="card-body">
             <h5 class="card-title">${nombre}</h5>
             <p class="card-text">
                 Sección: ${seccion}<br>
                 Horario: ${horario}<br>
                 Sala: ${sala}<br>
-                Profesor: ${profesor}
+                Profesor: ${profesor}<br>
+                Día: ${dia} <!-- Agregar el día -->
             </p>
-        </div>            
+        </div>          
         <div class="buttons-container">
         <!-- Botones de los días -->
             ${diasSemana.map(dia => `<button class="btn btn-primary" onclick="asignarDatos('${nombre}', '${seccion}', '${horario}', '${sala}', '${profesor}', '${dia}')">${dia.charAt(0).toUpperCase() + dia.slice(1)}</button>`).join('')}
@@ -119,12 +120,12 @@ function eliminarAsignatura(id) {
 function asignarDatos(nombre, seccion, horario, sala, profesor, dia) {
     insertarDatosEnTabla(nombre, seccion, horario, sala, profesor, dia);
 }
-  
 
 
 
-// Cargar las asignaturas del LocalStorage al cargar la página
-document.addEventListener('DOMContentLoaded', cargarAsignaturasGuardadas);
+
+document.addEventListener('DOMContentLoaded', cargarAsignaturasDesdeExcel);
+
 
 function calcularFilaPorHorario(horario) {
     // Agregamos los horarios y sus filas correspondientes en un objeto
@@ -175,7 +176,7 @@ function limpiarTabla() {
 function generarPDF() {
     const header = "Horarios";
     const table = document.getElementById("horariosTabla");
-  
+
     // Crea un nuevo documento para imprimir
     const printWindow = window.open('', '', 'width=800,height=600');
     printWindow.document.write(`
@@ -203,19 +204,70 @@ function generarPDF() {
       </body>
       </html>
     `);
-  
+
     // Espera a que el contenido se cargue antes de imprimir
     printWindow.document.addEventListener('DOMContentLoaded', () => {
-      // Llama a la función window.print() para abrir la ventana de impresión
-      printWindow.print();
-      printWindow.close();
+        // Llama a la función window.print() para abrir la ventana de impresión
+        printWindow.print();
+        printWindow.close();
     });
 }
 
-  
-  
 
 
-  
-  
-  
+function cargarAsignaturasDesdeExcel() {
+    const urlArchivo = 'test horario html.xlsx';
+
+    fetch(urlArchivo)
+        .then(response => response.arrayBuffer())
+        .then(arrayBuffer => {
+            const workbook = XLSX.read(arrayBuffer, { type: 'array' });
+            const worksheet = workbook.Sheets[workbook.SheetNames[0]];
+            const data = XLSX.utils.sheet_to_json(worksheet);
+
+            // Agrupar las asignaturas por sección
+            const asignaturasPorSeccion = {};
+            data.forEach(asignatura => {
+                const seccion = asignatura['Sección'];
+                if (!asignaturasPorSeccion[seccion]) {
+                    asignaturasPorSeccion[seccion] = [];
+                }
+                asignaturasPorSeccion[seccion].push(asignatura);
+            });
+
+            // Limpiar el contenedor de asignaturas guardadas
+            const asignaturasGuardadasDiv = document.getElementById('asignaturasGuardadas');
+            asignaturasGuardadasDiv.innerHTML = '';
+
+            // Iterar sobre las secciones y crear las cards para cada sección
+            Object.keys(asignaturasPorSeccion).forEach(seccion => {
+                const asignaturasDeSeccion = asignaturasPorSeccion[seccion];
+                const card = crearCardSeccion(seccion, asignaturasDeSeccion);
+                asignaturasGuardadasDiv.appendChild(card);
+            });
+        })
+        .catch(error => {
+            console.error('Error al cargar el archivo Excel:', error);
+        });
+}
+
+function crearCardSeccion(seccion, asignaturas) {
+    const card = document.createElement('div');
+    card.classList.add('card');
+    card.innerHTML = `
+        <div class="card-body">
+            <h5 class="card-title">Sección: ${seccion}</h5>
+            ${asignaturas.map(asignatura => `
+                <p class="card-text">
+                    Asignatura: ${asignatura['Asignatura']}<br>
+                    Horario: ${asignatura['Horario']}<br>
+                    Sala: ${asignatura['Sala']}<br>
+                    Docente: ${asignatura['Docente']}
+                </p>
+            `).join('')}
+        </div>            
+    `;
+    return card;
+}
+
+
