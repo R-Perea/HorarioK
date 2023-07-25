@@ -119,44 +119,49 @@ function calcularFilaPorHorario(horario) {
 
 
 function cargarAsignaturasDesdeExcel() {
-    const urlArchivo = 'test horario html.xlsx';
+    const fileInput = document.getElementById('fileInput');
+    const file = fileInput.files[0];
 
-    fetch(urlArchivo)
-        .then(response => response.arrayBuffer())
-        .then(arrayBuffer => {
-            const workbook = XLSX.read(arrayBuffer, { type: 'array' });
-            const worksheet = workbook.Sheets[workbook.SheetNames[0]];
-            const data = XLSX.utils.sheet_to_json(worksheet);
+    if (!file) {
+        alert('Por favor, seleccione un archivo Excel.');
+        return;
+    }
 
-            // Limpiar el contenedor de asignaturas guardadas
-            const asignaturasGuardadasDiv = document.getElementById('asignaturasGuardadas');
-            asignaturasGuardadasDiv.innerHTML = '';
+    const reader = new FileReader();
 
+    reader.onload = function (e) {
+        const data = e.target.result;
+        const workbook = XLSX.read(data, { type: 'binary' });
+        const worksheet = workbook.Sheets[workbook.SheetNames[0]];
+        const jsonData = XLSX.utils.sheet_to_json(worksheet);
 
+        // Resto del código para procesar los datos del archivo Excel...
+        // Puedes mantener el resto del código que agrupa y crea las cards por sección.
 
-            // Objeto para almacenar las asignaturas agrupadas por sección
-            const asignaturasPorSeccion = {};
+        const asignaturasGuardadasDiv = document.getElementById('asignaturasGuardadas');
+        asignaturasGuardadasDiv.innerHTML = '';
 
-            // Agrupar las asignaturas por sección
-            data.forEach(asignatura => {
-                const seccion = asignatura.Sección;
-                if (!asignaturasPorSeccion[seccion]) {
-                    asignaturasPorSeccion[seccion] = [];
-                }
-                asignaturasPorSeccion[seccion].push(asignatura);
-            });
+        const asignaturasPorSeccion = {};
 
-            // Crear las cards por sección y mostrar los días dentro de cada card
-            Object.keys(asignaturasPorSeccion).forEach(seccion => {
-                const asignaturas = asignaturasPorSeccion[seccion];
-                const card = crearCardAsignatura(asignaturas); // Solo se pasa una asignatura
-                asignaturasGuardadasDiv.appendChild(card);
-            });
-        })
-        .catch(error => {
-            console.error('Error al cargar el archivo Excel:', error);
+        jsonData.forEach(asignatura => {
+            const seccion = asignatura.Sección;
+            if (!asignaturasPorSeccion[seccion]) {
+                asignaturasPorSeccion[seccion] = [];
+            }
+            asignaturasPorSeccion[seccion].push(asignatura);
         });
+
+        Object.keys(asignaturasPorSeccion).forEach(seccion => {
+            const asignaturas = asignaturasPorSeccion[seccion];
+            const card = crearCardAsignatura(asignaturas);
+            asignaturasGuardadasDiv.appendChild(card);
+        });
+    };
+
+    reader.readAsBinaryString(file);
 }
+
+
 
 function crearCardAsignatura(asignaturas) {
     const card = document.createElement('div');
