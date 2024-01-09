@@ -42,27 +42,46 @@ function loadexcel() {
       // Resto del código para procesar los datos del archivo Excel...
       // Puedes mantener el resto del código que agrupa y crea las cards por sección.
 
-      const asignaturasGuardadasDiv = document.getElementById('asignaturasGuardadas');
-      asignaturasGuardadasDiv.innerHTML = '';
+      cargarCards(jsonData)
 
-      const asignaturasPorSeccion = {};
-
-      jsonData.forEach(asignatura => {
-          const seccion = asignatura.Sección;
-          if (!asignaturasPorSeccion[seccion]) {
-              asignaturasPorSeccion[seccion] = [];
-          }
-          asignaturasPorSeccion[seccion].push(asignatura);
-      });
-
-      Object.keys(asignaturasPorSeccion).forEach(seccion => {
-          const asignaturas = asignaturasPorSeccion[seccion];
-          const card = crearCardAsignatura(asignaturas);
-          asignaturasGuardadasDiv.appendChild(card);
-      });
   };
 
   reader.readAsBinaryString(file);
+}
+
+function cargarCards(toLoad){
+  //Consigue el container donde deben ir todas las cards
+  const container = document.getElementById("asignaturasGuardadas");
+  container.innerHTML = '';
+  //Crea una fila
+  const row = document.createElement("div");
+  container.appendChild(row);
+  row.classList.add('row');
+  toLoad.forEach(asignatura => {
+    const col = document.createElement("div");
+    row.appendChild(col);
+    const card = document.createElement("div");
+    card.classList.add("card");
+    col.appendChild(card);
+    col.classList.add('col-4');
+    const horarioSinEspacios = asignatura.Horario.substring(3);
+    const diaAbreviado = diasMap[asignatura.Día];
+    contenidoTarjeta = `
+            <h5 class="card-title">${asignatura.Asignatura}</h5>
+            <p class="card-text">
+                Sección: ${asignatura.Sección}<br>
+                Horario: ${horarioSinEspacios}<br>
+                Sala: ${asignatura.Sala}<br>
+                Profesor: ${asignatura.Docente}<br>
+                Día: ${asignatura.Día}<br>
+            </p>
+            <div class="buttons-container">
+                <button type="button" class="btn btn-primary" onclick="insertarDatosEnTabla('${asignatura.Asignatura}', '${asignatura.Sección}', '${horarioSinEspacios}', '${asignatura.Sala}', '${diaAbreviado}', '${asignatura.Horario}')">Insertar en Tabla</button>
+            </div>
+        `;
+    card.innerHTML = contenidoTarjeta;
+  });
+  
 }
 
 function filterasignatura(carrera){
@@ -73,5 +92,5 @@ function filterasignatura(carrera){
       asignaturasfilter.push(element)
     }
   });
-
+  cargarCards(asignaturasfilter);
 }
