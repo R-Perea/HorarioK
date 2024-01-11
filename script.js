@@ -201,55 +201,6 @@ function crearCardAsignatura(asignaturas) {
     return card;
 }
 
-function insertarDatosEnTabla(nombre, seccion, horarioSinEspacios, sala, diaAbreviado, horarioCompleto) {
-    // Eliminamos los espacios en blanco del horario sin espacios
-    const horarioSinEspaciosSinBlanco = horarioSinEspacios.replace(/\s/g, '');
-
-    const filas = calcularFilaPorHorario(horarioSinEspaciosSinBlanco);
-
-    // Verificar si el horario es un bloque extendido o un rango de bloques
-    if (filas.inicio === 0 && filas.fin === 0) {
-        // Si es un solo bloque, obtenemos la fila de inicio directamente
-        const fila = calcularFilaPorHorario(horarioSinEspacios);
-
-        if (fila === 0) {
-            alert('El horario está fuera del rango especificado. No se puede agregar la asignatura en este horario.');
-            return;
-        }
-
-        const cell = document.getElementById(`${diaAbreviado}${fila}`);
-        
-        if (cell === null) {
-            alert('Error al insertar los datos. La celda no existe.');
-            return;
-        }
-
-        if (cell.textContent.trim() !== '') {
-            alert('Horario ocupado. No se puede agregar la asignatura en este horario.');
-        } else {
-            cell.textContent = `${nombre}\n${seccion}\n${sala}`;
-        }
-    } else {
-        // Si es un horario extendido, iteramos sobre las filas del rango y agregamos en cada una de ellas.
-        for (let fila = filas.inicio; fila <= filas.fin; fila++) {
-            const cell = document.getElementById(`${diaAbreviado}${fila}`);
-
-            if (cell === null) {
-                alert('Error al insertar los datos. La celda no existe.');
-                return;
-            }
-
-            if (cell.textContent.trim() !== '') {
-                alert('Horario ocupado. No se puede agregar la asignatura en este horario.');
-                return; // Salimos del loop si encontramos alguna celda ocupada
-            } else {
-                cell.textContent = `${nombre}\n${seccion}\n${sala}`;
-                console.log(diaAbreviado,fila);
-            }
-        }
-    }
-    
-}
 
 
 

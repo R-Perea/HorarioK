@@ -8,7 +8,7 @@ function loadexcel() {
   }
 
   const reader = new FileReader();
-
+  let grouped = {};
   reader.onload = function (e) {
       const data = e.target.result;
       const workbook = XLSX.read(data, { type: 'binary' });
@@ -42,6 +42,7 @@ function loadexcel() {
       // Resto del código para procesar los datos del archivo Excel...
       // Puedes mantener el resto del código que agrupa y crea las cards por sección.
 
+
       cargarCards(jsonData)
 
   };
@@ -50,39 +51,99 @@ function loadexcel() {
 }
 
 function cargarCards(toLoad){
-  //Consigue el container donde deben ir todas las cards
   const container = document.getElementById("asignaturasGuardadas");
   container.innerHTML = '';
-  //Crea una fila
-  const row = document.createElement("div");
-  container.appendChild(row);
-  row.classList.add('row');
+
+  let grouped = {};
   toLoad.forEach(asignatura => {
-    const col = document.createElement("div");
-    row.appendChild(col);
-    const card = document.createElement("div");
-    card.classList.add("card");
-    col.appendChild(card);
-    col.classList.add('col-4');
-    const horarioSinEspacios = asignatura.Horario.substring(3);
-    const diaAbreviado = diasMap[asignatura.Día];
-    contenidoTarjeta = `
-            <h5 class="card-title">${asignatura.Asignatura}</h5>
-            <p class="card-text">
-                Sección: ${asignatura.Sección}<br>
-                Horario: ${horarioSinEspacios}<br>
-                Sala: ${asignatura.Sala}<br>
-                Profesor: ${asignatura.Docente}<br>
-                Día: ${asignatura.Día}<br>
-            </p>
-            <div class="buttons-container">
-                <button type="button" class="btn btn-primary" onclick="insertarDatosEnTabla('${asignatura.Asignatura}', '${asignatura.Sección}', '${horarioSinEspacios}', '${asignatura.Sala}', '${diaAbreviado}', '${asignatura.Horario}')">Insertar en Tabla</button>
-            </div>
-        `;
-    card.innerHTML = contenidoTarjeta;
+    if (!grouped[asignatura.Sección]) {
+      grouped[asignatura.Sección] = [];
+    }
+    grouped[asignatura.Sección].push(asignatura);
   });
+
+  Object.keys(grouped).forEach(seccion => {
+    const section = document.createElement("section");
+    container.appendChild(section);
+    section.innerHTML = `<h2>Sección: ${seccion}</h2>`;
+    section.classList.add('section');
+
+    grouped[seccion].forEach(asignatura => {
+      const card = document.createElement("div");
+      section.appendChild(card);
+      card.classList.add("card");
+
+      const horarioSinEspacios = asignatura.Horario.substring(3);
+      const diaAbreviado = diasMap[asignatura.Día];
+      const button = document.createElement("button");
+      button.type = "button";
+      button.className = "btn btn-primary";
+      button.textContent = "Insertar en Tabla";
+      button.addEventListener("click", () => insertarDatosEnTabla(seccion, grouped));
+      const buttonsContainer = document.createElement("div");
+      buttonsContainer.className = "buttons-container";
+      buttonsContainer.appendChild(button);
   
+      let contenidoTarjeta = `
+        <h5 class="card-title">${asignatura.Asignatura}</h5>
+        <p class="card-text">
+            Horario: ${horarioSinEspacios}<br>
+            Sala: ${asignatura.Sala}<br>
+            Profesor: ${asignatura.Docente}<br>
+            Día: ${asignatura.Día}<br>
+        </p>
+      `;
+      card.innerHTML = contenidoTarjeta;
+      card.appendChild(buttonsContainer);
+    });
+  });
 }
+
+
+function insertarDatosEnTabla(seccion, grouped) {
+  const asignaturas = grouped[seccion];
+  asignaturas.forEach(asignatura => {
+      const horarioSinEspacios = asignatura.Horario.substring(3).replace(/\s/g, '');
+      const diaAbreviado = diasMap[asignatura.Día];
+      const filas = calcularFilaPorHorario(horarioSinEspacios);
+
+      if (filas.inicio === 0 && filas.fin === 0) {
+          const fila = calcularFilaPorHorario(horarioSinEspacios);
+          if (fila === 0) {
+              alert('El horario está fuera del rango especificado. No se puede agregar la asignatura en este horario.');
+              return;
+          }
+
+          const cell = document.getElementById(`${diaAbreviado}${fila}`);
+          if (cell === null) {
+              alert('Error al insertar los datos. La celda no existe.');
+              return;
+          }
+
+          if (cell.textContent.trim() !== '') {
+              alert('Horario ocupado. No se puede agregar la asignatura en este horario.');
+          } else {
+              cell.textContent = `${asignatura.Asignatura}\n${seccion}\n${asignatura.Sala}`;
+          }
+      } else {
+          for (let fila = filas.inicio; fila <= filas.fin; fila++) {
+              const cell = document.getElementById(`${diaAbreviado}${fila}`);
+              if (cell === null) {
+                  alert('Error al insertar los datos. La celda no existe.');
+                  return;
+              }
+
+              if (cell.textContent.trim() !== '') {
+                  alert('Horario ocupado. No se puede agregar la asignatura en este horario.');
+                  return;
+              } else {
+                  cell.textContent = `${asignatura.Asignatura}\n${seccion}\n${asignatura.Sala}`;
+              }
+          }
+      }
+  });
+}
+
 
 function filterasignatura(carrera){
   const asignaturas = JSON.parse(localStorage.getItem('cargaAsignaturas'));

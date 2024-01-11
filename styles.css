@@ -10,6 +10,7 @@
     display: flex;
     flex-direction: column;
     margin: 10px; /* Agregar un pequeño margen entre las cards */
+
 }
   
 .buttons-container {
@@ -17,3 +18,4 @@
     justify-content: flex-end;
     gap: 5px;
 }
+
