@@ -8,16 +8,13 @@ function loadexcel() {
   }
 
   const reader = new FileReader();
-  let grouped = {};
+  let jsonData = null;
   reader.onload = function (e) {
       const data = e.target.result;
       const workbook = XLSX.read(data, { type: 'binary' });
       const worksheet = workbook.Sheets[workbook.SheetNames[0]];
-      const jsonData = XLSX.utils.sheet_to_json(worksheet);
+      jsonData = XLSX.utils.sheet_to_json(worksheet);
       localStorage.setItem('cargaAsignaturas', JSON.stringify(jsonData));
-      // jsonData.forEach(element => {
-      //   console.log(element.Carrera);
-      // });
 
       let carreras = [];
       jsonData.forEach(element => {
@@ -25,7 +22,7 @@ function loadexcel() {
           carreras.push(element.Carrera);
         }
       });
-      console.log(carreras);
+
       const contenedorCarreras = document.getElementById("card-filtro");
       carreras.forEach(element => {
         const boton = document.createElement("button");
@@ -34,20 +31,61 @@ function loadexcel() {
         if (element==undefined) {
           boton.textContent = "No Definido"
         }
-        boton.addEventListener("click", () => filterasignatura(element))
+        boton.addEventListener("click", () => cargarNiveles(element))
         contenedorCarreras.appendChild(boton);
-
       });
-
-      // Resto del código para procesar los datos del archivo Excel...
-      // Puedes mantener el resto del código que agrupa y crea las cards por sección.
-
-
-      cargarCards(jsonData)
-
   };
 
   reader.readAsBinaryString(file);
+}
+
+function cargarNiveles(carrera) {
+  const jsonData = JSON.parse(localStorage.getItem('cargaAsignaturas'));
+
+  let niveles = [];
+  jsonData.forEach(element => {
+    if (element.Carrera === carrera && !niveles.includes(element.Nivel)) {
+      niveles.push(element.Nivel);
+    }
+  });
+
+  const contenedorNiveles = document.getElementById("card-filtro-nivel");
+  niveles.forEach(element => {
+    const boton = document.createElement("button");
+    boton.classList.add("btn", "btn-primary", "m-2");
+    boton.textContent = element;
+    if (element==undefined) {
+      boton.textContent = "No Definido"
+    }
+    boton.addEventListener("click", () => {
+      filterasignatura(carrera, element);
+      cargarJornadas(carrera, element);
+    })
+    contenedorNiveles.appendChild(boton);
+  });
+}
+
+function cargarJornadas(carrera, nivel) {
+  const jsonData = JSON.parse(localStorage.getItem('cargaAsignaturas'));
+
+  let jornadas = [];
+  jsonData.forEach(element => {
+    if (element.Carrera === carrera && element.Nivel === nivel && !jornadas.includes(element.Jornada)) {
+      jornadas.push(element.Jornada);
+    }
+  });
+
+  const contenedorJornadas = document.getElementById("card-filtro-jornada");
+  jornadas.forEach(element => {
+    const boton = document.createElement("button");
+    boton.classList.add("btn", "btn-primary", "m-2");
+    boton.textContent = element;
+    if (element==undefined) {
+      boton.textContent = "No Definido"
+    }
+    boton.addEventListener("click", () => filterasignatura(carrera, nivel, element))
+    contenedorJornadas.appendChild(boton);
+  });
 }
 
 function cargarCards(toLoad){
@@ -145,11 +183,11 @@ function insertarDatosEnTabla(seccion, grouped) {
 }
 
 
-function filterasignatura(carrera){
+function filterasignatura(carrera, nivel, jornada){
   const asignaturas = JSON.parse(localStorage.getItem('cargaAsignaturas'));
   let asignaturasfilter = [];
   asignaturas.forEach(element => {
-    if (element.Carrera==carrera) {
+    if (element.Carrera == carrera && element.Nivel == nivel && element.Jornada == jornada) {
       asignaturasfilter.push(element)
     }
   });
