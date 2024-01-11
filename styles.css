@@ -1,21 +1,12 @@
-/* Estilo para el contenedor externo */
-.cards-container {
-    display: flex;
-    flex-direction: row;
-    flex-wrap: wrap; /* Si hay espacio insuficiente en el ancho, las cards se envolverán a una nueva línea */
-}
-
 /* Estilo para cada card individual */
 .card {
     display: flex;
     flex-direction: column;
     margin: 10px; /* Agregar un pequeño margen entre las cards */
-
 }
-  
+
 .buttons-container {
     display: flex;
     justify-content: flex-end;
     gap: 5px;
 }
-
