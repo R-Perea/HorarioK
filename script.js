@@ -122,10 +122,10 @@ function cargarAsignaturasDesdeExcel() {
     const fileInput = document.getElementById('fileInput');
     const file = fileInput.files[0];
 
-    if (!file) {
-        alert('Por favor, seleccione un archivo Excel.');
-        return;
-    }
+    // if (!file) {
+    //     alert('Por favor, seleccione un archivo Excel.');
+    //     return;
+    // }
 
     const reader = new FileReader();
 

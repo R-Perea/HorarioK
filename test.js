@@ -109,7 +109,7 @@ function cargarCards(toLoad){
     grouped[seccion].forEach(asignatura => {
       const card = document.createElement("div");
       section.appendChild(card);
-      card.classList.add("card");
+      card.classList.add("card", asignatura.Asignatura.replace(/\s/g, ''));
 
       const horarioSinEspacios = asignatura.Horario.substring(3);
       const diaAbreviado = diasMap[asignatura.Día];
@@ -140,11 +140,12 @@ function cargarCards(toLoad){
 
 function insertarDatosEnTabla(seccion, grouped) {
   const asignaturas = grouped[seccion];
-  asignaturas.forEach(asignatura => {
+  for (let i = 0; i < asignaturas.length; i++) {
+      const asignatura = asignaturas[i];
       const horarioSinEspacios = asignatura.Horario.substring(3).replace(/\s/g, '');
       const diaAbreviado = diasMap[asignatura.Día];
       const filas = calcularFilaPorHorario(horarioSinEspacios);
-
+      
       if (filas.inicio === 0 && filas.fin === 0) {
           const fila = calcularFilaPorHorario(horarioSinEspacios);
           if (fila === 0) {
@@ -160,8 +161,12 @@ function insertarDatosEnTabla(seccion, grouped) {
 
           if (cell.textContent.trim() !== '') {
               alert('Horario ocupado. No se puede agregar la asignatura en este horario.');
+              return;
           } else {
               cell.textContent = `${asignatura.Asignatura}\n${seccion}\n${asignatura.Sala}`;
+              document.querySelectorAll(`.${asignatura.Asignatura.replace(/\s/g, '')}`).forEach(card => {
+                card.style.display = 'none';
+              });
           }
       } else {
           for (let fila = filas.inicio; fila <= filas.fin; fila++) {
@@ -176,10 +181,13 @@ function insertarDatosEnTabla(seccion, grouped) {
                   return;
               } else {
                   cell.textContent = `${asignatura.Asignatura}\n${seccion}\n${asignatura.Sala}`;
+                  document.querySelectorAll(`.${asignatura.Asignatura.replace(/\s/g, '')}`).forEach(card => {
+                    card.style.display = 'none';
+                  });
               }
           }
       }
-  });
+  }
 }
 
 
