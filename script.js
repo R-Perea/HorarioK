@@ -75,8 +75,7 @@ function calcularFilaPorHorario(horario) {
         '15:11-15:50': 10,
         '16:01-16:40': 11,
         '16:41-17:20': 12,
-        '17:31-18:10': 13,
-        '18:11-18:50': 14
+        '17:31-18:10': 13
     };
 
     const horariosFilaRango = [
@@ -89,24 +88,39 @@ function calcularFilaPorHorario(horario) {
         { inicio: '17:31-18:10', fin: '18:11-18:50', filaInicio: 13, filaFin: 14 }
     ];
 
-    // Verificar si el horario está en horariosFila
-    if (horario in horariosFila) {
-        return { inicio: horariosFila[horario], fin: horariosFila[horario] };
+    // Dividir el horario en hora de inicio y hora de fin
+    const [horaInicio, horaFin] = horario.split('-').map(h => h.substring(0, 5));
+
+    // Calcular la duración de la clase en minutos
+    const duracion = (new Date(`1970-01-01T${horaFin}:00`) - new Date(`1970-01-01T${horaInicio}:00`)) / 60000;
+
+    // Verificar si la hora de inicio y la hora de fin están en el mismo rango de horariosFilaRango
+    for (const rango of horariosFilaRango) {
+        const inicio = rango.inicio.substring(0, 5); // Obtener solo la hora de inicio
+        const fin = rango.fin.substring(6); // Obtener solo la hora de fin
+
+        // Si la hora de inicio y la hora de fin están dentro del rango
+        if ((horaInicio >= inicio && horaInicio <= fin) && (horaFin >= inicio && horaFin <= fin)) {
+            // Si la duración de la clase es de 40 minutos o menos, la fila de inicio y la fila de fin son las mismas
+            if (duracion <= 40) {
+                return { inicio: rango.filaInicio, fin: rango.filaInicio };
+            } else {
+                // Si la duración de la clase es de más de 40 minutos, la fila de inicio y la fila de fin son diferentes
+                return { inicio: rango.filaInicio, fin: rango.filaFin };
+            }
+        }
     }
 
-    // Si el horario no está en horariosFila, buscamos en horariosFilaRango
-    for (const rango of horariosFilaRango) {
-        const [inicio, fin] = rango.inicio.split('-'); // Obtener solo la hora de inicio y fin
-
-        // Verificar si el horario está dentro del rango
-        if (horario >= inicio && horario <= fin) {
-            return { inicio: rango.filaInicio, fin: rango.filaFin };
-        }
+    // Si la hora de inicio y la hora de fin no están en el mismo rango de horariosFilaRango, usamos horariosFila
+    if (horaInicio in horariosFila && horaFin in horariosFila) {
+        return { inicio: horariosFila[horaInicio], fin: horariosFila[horaFin] };
     }
 
     // Si no se encontró en ningún caso, devolvemos null
     return null;
 }
+
+
 
 
 

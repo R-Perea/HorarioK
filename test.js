@@ -178,19 +178,22 @@ function cargarCards(toLoad){
 }
 function insertarDatosEnTabla(seccion, grouped) {
   const asignaturas = grouped[seccion];
+  console.log(asignaturas);
+
   for (let i = 0; i < asignaturas.length; i++) {
       const asignatura = asignaturas[i];
       const horarioSinEspacios = asignatura.Horario.substring(3).replace(/\s/g, '');
       const diaAbreviado = diasMap[asignatura.Día];
       const filas = calcularFilaPorHorario(horarioSinEspacios);
-      
-      if (filas.inicio === 0 && filas.fin === 0) {
-          const fila = calcularFilaPorHorario(horarioSinEspacios);
-          if (fila === 0) {
-              alert('El horario está fuera del rango especificado. No se puede agregar la asignatura en este horario.');
-              return false;
-          }
 
+      console.log(`Asignatura: ${asignatura.Asignatura}, Horario: ${horarioSinEspacios}, Filas: ${JSON.stringify(filas)}`);
+
+      if (filas === null) {
+          alert('El horario está fuera del rango especificado. No se puede agregar la asignatura en este horario.');
+          return false;
+      }
+
+      for (let fila = filas.inicio; fila <= filas.fin; fila++) {
           const cell = document.getElementById(`${diaAbreviado}${fila}`);
           if (cell === null) {
               alert('Error al insertar los datos. La celda no existe.');
@@ -201,43 +204,21 @@ function insertarDatosEnTabla(seccion, grouped) {
               alert('Horario ocupado. No se puede agregar la asignatura en este horario.');
               return false;
           } else {
-            cell.textContent = `${asignatura.Asignatura}\n${seccion}\n${asignatura.Sala}`;
-            document.querySelectorAll(`.${asignatura.Asignatura.replace(/\s/g, '')}`).forEach(card => {
-              card.style.display = 'none';
-            });
-            document.querySelectorAll(`.section`).forEach(section => {
-              if (section.querySelector(`h2`).textContent === `Sección: ${seccion}`) {
-                section.style.display = 'none';
-              }
-            });
-          }
-      } else {
-          for (let fila = filas.inicio; fila <= filas.fin; fila++) {
-              const cell = document.getElementById(`${diaAbreviado}${fila}`);
-              if (cell === null) {
-                  alert('Error al insertar los datos. La celda no existe.');
-                  return false;
-              }
-
-              if (cell.textContent.trim() !== '') {
-                  alert('Horario ocupado. No se puede agregar la asignatura en este horario.');
-                  return false;
-              } else {
-                cell.textContent = `${asignatura.Asignatura}\n${seccion}\n${asignatura.Sala}`;
-                document.querySelectorAll(`.${asignatura.Asignatura.replace(/\s/g, '')}`).forEach(card => {
+              cell.textContent = `${asignatura.Asignatura}\n${seccion}\n${asignatura.Sala}`;
+              document.querySelectorAll(`.${asignatura.Asignatura.replace(/\s/g, '')}`).forEach(card => {
                   card.style.display = 'none';
-                });
-                document.querySelectorAll(`.section`).forEach(section => {
+              });
+              document.querySelectorAll(`.section`).forEach(section => {
                   if (section.querySelector(`h2`).textContent === `Sección: ${seccion}`) {
-                    section.style.display = 'none';
+                      section.style.display = 'none';
                   }
-                });
-              }
+              });
           }
       }
   }
   return true;
 }
+
 
 
 
