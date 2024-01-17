@@ -60,7 +60,6 @@ function generarPDF() {
 
 document.addEventListener('DOMContentLoaded', cargarAsignaturasDesdeExcel);
 
-
 function calcularFilaPorHorario(horario) {
     // Agregamos los horarios y sus filas correspondientes en un objeto
     const horariosFila = {
@@ -76,7 +75,8 @@ function calcularFilaPorHorario(horario) {
         '15:11-15:50': 10,
         '16:01-16:40': 11,
         '16:41-17:20': 12,
-        '17:31-18:10': 13
+        '17:31-18:10': 13,
+        '18:11-18:50': 14
     };
 
     const horariosFilaRango = [
@@ -96,8 +96,7 @@ function calcularFilaPorHorario(horario) {
 
     // Si el horario no está en horariosFila, buscamos en horariosFilaRango
     for (const rango of horariosFilaRango) {
-        const inicio = rango.inicio.substring(0, 5); // Obtener solo la hora de inicio
-        const fin = rango.fin.substring(6); // Obtener solo la hora de fin
+        const [inicio, fin] = rango.inicio.split('-'); // Obtener solo la hora de inicio y fin
 
         // Verificar si el horario está dentro del rango
         if (horario >= inicio && horario <= fin) {
@@ -108,6 +107,9 @@ function calcularFilaPorHorario(horario) {
     // Si no se encontró en ningún caso, devolvemos null
     return null;
 }
+
+
+
 
 
 
