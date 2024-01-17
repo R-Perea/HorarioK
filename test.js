@@ -130,10 +130,10 @@ function cargarCards(toLoad){
     });
   
     const asignaturaDiv = document.createElement("div");
-    asignaturaDiv.classList.add('asignatura');
+    asignaturaDiv.classList.add('asignatura', 'flex-container');
     container.appendChild(asignaturaDiv);
   
-    Object.keys(grouped).forEach(seccion => {
+    Object.keys(grouped).sort().forEach(seccion => {
       const section = document.createElement("section");
       asignaturaDiv.appendChild(section);
       section.innerHTML = `<h2 class="titulo-seccion">Sección: ${seccion}</h2>`;
@@ -144,8 +144,10 @@ function cargarCards(toLoad){
       button.className = "btn btn-primary";
       button.textContent = "Insertar en Tabla";
       button.addEventListener("click", () => {
-        insertarDatosEnTabla(seccion, grouped);
-        asignaturaDiv.style.display = 'none';
+        const insercionExitosa = insertarDatosEnTabla(seccion, grouped);
+        if (insercionExitosa) {
+          asignaturaDiv.style.display = 'none';
+        }
       });
       const buttonsContainer = document.createElement("div");
       buttonsContainer.className = "buttons-container";
@@ -174,7 +176,6 @@ function cargarCards(toLoad){
     });
   });
 }
-
 function insertarDatosEnTabla(seccion, grouped) {
   const asignaturas = grouped[seccion];
   for (let i = 0; i < asignaturas.length; i++) {
@@ -187,18 +188,18 @@ function insertarDatosEnTabla(seccion, grouped) {
           const fila = calcularFilaPorHorario(horarioSinEspacios);
           if (fila === 0) {
               alert('El horario está fuera del rango especificado. No se puede agregar la asignatura en este horario.');
-              return;
+              return false;
           }
 
           const cell = document.getElementById(`${diaAbreviado}${fila}`);
           if (cell === null) {
               alert('Error al insertar los datos. La celda no existe.');
-              return;
+              return false;
           }
 
           if (cell.textContent.trim() !== '') {
               alert('Horario ocupado. No se puede agregar la asignatura en este horario.');
-              return;
+              return false;
           } else {
             cell.textContent = `${asignatura.Asignatura}\n${seccion}\n${asignatura.Sala}`;
             document.querySelectorAll(`.${asignatura.Asignatura.replace(/\s/g, '')}`).forEach(card => {
@@ -215,12 +216,12 @@ function insertarDatosEnTabla(seccion, grouped) {
               const cell = document.getElementById(`${diaAbreviado}${fila}`);
               if (cell === null) {
                   alert('Error al insertar los datos. La celda no existe.');
-                  return;
+                  return false;
               }
 
               if (cell.textContent.trim() !== '') {
                   alert('Horario ocupado. No se puede agregar la asignatura en este horario.');
-                  return;
+                  return false;
               } else {
                 cell.textContent = `${asignatura.Asignatura}\n${seccion}\n${asignatura.Sala}`;
                 document.querySelectorAll(`.${asignatura.Asignatura.replace(/\s/g, '')}`).forEach(card => {
@@ -234,11 +235,9 @@ function insertarDatosEnTabla(seccion, grouped) {
               }
           }
       }
-  }  
- 
+  }
+  return true;
 }
-
-
 
 
 
