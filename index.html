@@ -38,6 +38,7 @@
                         <div class="col-sm-2 d-grid">
                             <button
                                 type="button"
+                                id="btnCargarHorario"
                                 class="btn btn-primary"
                                 onclick="loadexcel()"
                             >
@@ -48,14 +49,16 @@
                 </div>
             </div>
 
-            <hr class="my-5" />
+            <hr class="my-5">
 
             <div>
                 <h2 class="fs-5 fw-bold mb-4">
                     2. Filtra las asignaturas que quieres ver segun tu carrera
                 </h2>
                 <div class="p-3 border rounded-2">
-                    <div id="card-filtro" class="card-body"></div>
+                    <div id="card-filtro" class="card-body">
+                        <select class="p-3 border rounded-2" name="" id="opcionesCarreras"></select>
+                    </div>
                 </div>
             </div>
 
@@ -63,10 +66,9 @@
             <h2 class="fs-5 fw-bold mb-4">
                 2.1 Semestre y Jornada
             </h2>
-            <div class="card">
-                <div id="card-filtro" class="card-body"></div>
-                <div id="card-filtro-nivel">Semestre</div>
-                <div id="card-filtro-jornada">Jornada</div>
+            <div class="card d-flex flex-row">
+                <div class="" id="card-filtro-nivel" >Semestre</div>
+                <div class="p-fixed m-auto" id="card-filtro-jornada">Jornada</div>
             </div>
 
             <hr class="my-5" />
