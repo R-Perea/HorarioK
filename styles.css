@@ -1,19 +1,32 @@
-/* Estilo para el contenedor externo */
-.cards-container {
-    display: flex;
-    flex-direction: row;
-    flex-wrap: wrap; /* Si hay espacio insuficiente en el ancho, las cards se envolverán a una nueva línea */
-}
-
 /* Estilo para cada card individual */
 .card {
     display: flex;
     flex-direction: column;
-    margin: 10px; /* Agregar un pequeño margen entre las cards */
+    margin: 2px; /* Agregar un pequeño margen entre las cards */
 }
-  
+
 .buttons-container {
     display: flex;
-    justify-content: flex-end;
-    gap: 5px;
+    justify-content: center;
+    align-items: center;
+  }
+
+#horariosTabla td, #horariosTabla th {
+    width: fit-content; /* Cambia esto al ancho que desees */
+    height: 40px; /* Cambia esto a la altura que desees */
+    overflow: auto; /* Esto hará que el contenido que no quepa en la celda se pueda desplazar */
 }
+
+
+
+.titulo-seccion {
+    font-size: 24px; /* Cambia esto al tamaño que desees */
+}
+
+.card-largo {
+    width: 300px; /* Cambia esto al largo que desees */
+}
+.flex-container {
+    display: flex;
+    flex-wrap: wrap;
+  }

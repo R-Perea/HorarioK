@@ -3,162 +3,300 @@
 
 <head>
     <title>Organizador de Horarios y Editor de Asignaturas</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"
-        integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
-    <link rel="stylesheet" type="text/css" href="styles.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous" />
+    <link rel="stylesheet" type="text/css" href="styles.css" />
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
 
 <body>
-    <h1>Organizador de Horarios</h1>
+    <main class="container" style="max-width: 2120px">
+        <br />
 
-    <table id="horariosTabla" class="table table-primary table-striped-columns">
-        <thead>
-            <tr>
-                <th scope="col">#</th>
-                <th scope="col" data-dia="lunes">Lunes</th>
-                <th scope="col" data-dia="martes">Martes</th>
-                <th scope="col" data-dia="miercoles">Miércoles</th>
-                <th scope="col" data-dia="jueves">Jueves</th>
-                <th scope="col" data-dia="viernes">Viernes</th>
-            </tr>
-        </thead>
+        <h1 class="fw-bold">Organizador de Horarios - Duoc UC</h1>
 
-        <tbody>
-            <tr>
-                <th scope="row">8:31-9:10</th>
-                <td id="l1"></td>
-                <td id="m1"></td>
-                <td id="mi1"></td>
-                <td id="j1"></td>
-                <td id="v1"></td>
-            </tr>
-            <tr>
-                <th scope="row">9:11-9:50</th>
-                <td id="l2"></td>
-                <td id="m2"></td>
-                <td id="mi2"></td>
-                <td id="j2"></td>
-                <td id="v2"></td>
-            </tr>
-            <tr>
-                <th scope="row">10:01-10:40</th>
-                <td id="l3"></td>
-                <td id="m3"></td>
-                <td id="mi3"></td>
-                <td id="j3"></td>
-                <td id="v3"></td>
-            </tr>
-            <tr>
-                <th scope="row">10:41-11:20</th>
-                <td id="l4"></td>
-                <td id="m4"></td>
-                <td id="mi4"></td>
-                <td id="j4"></td>
-                <td id="v4"></td>
-            </tr>
-            <tr>
-                <th scope="row">11:31-12:10</th>
-                <td id="l5"></td>
-                <td id="m5"></td>
-                <td id="mi5"></td>
-                <td id="j5"></td>
-                <td id="v5"></td>
-            </tr>
-            <tr>
-                <th scope="row">12:11-12:50</th>
-                <td id="l6"></td>
-                <td id="m6"></td>
-                <td id="mi6"></td>
-                <td id="j6"></td>
-                <td id="v6"></td>
-            </tr>
-            <tr>
-                <th scope="row">13:01-13:40</th>
-                <td id="l7"></td>
-                <td id="m7"></td>
-                <td id="mi7"></td>
-                <td id="j7"></td>
-                <td id="v7"></td>
-            </tr>
-            <tr>
-                <th scope="row">13:41-14:20</th>
-                <td id="l8"></td>
-                <td id="m8"></td>
-                <td id="mi8"></td>
-                <td id="j8"></td>
-                <td id="v8"></td>
-            </tr>
-            <tr>
-                <th scope="row">14:31-15:10</th>
-                <td id="l9"></td>
-                <td id="m9"></td>
-                <td id="mi9"></td>
-                <td id="j9"></td>
-                <td id="v9"></td>
-            </tr>
-            <tr>
-                <th scope="row">15:11-15:50</th>
-                <td id="l10"></td>
-                <td id="m10"></td>
-                <td id="mi10"></td>
-                <td id="j10"></td>
-                <td id="v10"></td>
-            </tr>
-            <tr>
-                <th scope="row">16:01-16:40</th>
-                <td id="l11"></td>
-                <td id="m11"></td>
-                <td id="mi11"></td>
-                <td id="j11"></td>
-                <td id="v11"></td>
-            </tr>
-            <tr>
-                <th scope="row">16:41-17:20</th>
-                <td id="l12"></td>
-                <td id="m12"></td>
-                <td id="mi12"></td>
-                <td id="j12"></td>
-                <td id="v12"></td>
-            </tr>
-            <tr>
-                <th scope="row">17:31-18:10</th>
-                <td id="l13"></td>
-                <td id="m13"></td>
-                <td id="mi13"></td>
-                <td id="j13"></td>
-                <td id="v13"></td>
-            </tr>
-        </tbody>
-    </table>
+        <hr class="my-2" width="45%" />
+        <div class="row">
+            <div class="col">
+                <h2 class="fs-5 fw-bold mb-4">
+                    1. Elige y carga el archivo .xlsx con tus horarios
+                </h2>
 
-    <button type="button" onclick="limpiarTabla()">Limpiar Tabla</button>
+                <div class="row text-end">
+                    <div class="row">
+                        <div class="col-sm-11 d-grid p-2">
+                            <input type="file" class="form-control" id="fileInput" accept=".xlsx" />
+                        </div>
 
-    <button type="button" onclick="generarPDF()">Generar PDF</button>
+                    </div>
+                    <div class="col-sm-6 d-grid p-2">
+                        <button type="button" id="btnCargarHorario" class="btn btn-primary" onclick="loadexcel()">
+                            Cargar Horario
+                        </button>
+                    </div>
+                </div>
+            </div>
 
+            <div class="col">
+                <h2 class="fs-5 fw-bold mb-4">
+                    2. Filtra las asignaturas que quieres ver segun tu carrera
+                </h2>
 
-    <input type="file" id="fileInput" accept=".xlsx" />
-    <button onclick="cargarAsignaturasDesdeExcel()">Cargar Horario</button>
+                <div id="card-filtro" class="card-body">
+                    <select class="p-3 form-select-sm " name="" id="opcionesCarreras" style="width: 300px;"></select>
+                </div>
 
+            </div>
 
+            <div class="col">
+                <h2 class="fs-5 fw-bold mb-4">
+                    2.1 Semestre y Jornada
+                </h2>
+                <div class="row">
+                    <div class="col">
+                        <label for="">Semestre</label>
+                        <div class="" id="card-filtro-nivel"></div>
+                    </div>
+                    <div class="col">
+                        <label for="">Jornada</label>
+                        <div class="p-fixed m-auto" id="card-filtro-jornada"></div>
+                    </div>
+                </div>
 
-
-    <!-- formulario de asignaturas -->
-
-
-
-
-
-    <div class="container">
-        <h1>Asignaturas Guardadas</h1>
-        <div class="cards-container" id="asignaturasGuardadas">
-            <!-- Aquí se mostrarán las asignaturas guardadas -->
+            </div>
         </div>
-    </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz"crossorigin="anonymous"></script>
+
+
+        <div class="row text-center my-5">
+            <div class="col-sm-8 text-start">
+                <h2 class="fs-5 fw-bold mb-4">
+                    3. Comienza a agregar asignaturas a tu horario
+                </h2>
+            </div>
+
+            <div class="col">
+                <button type="button" class="btn btn-danger" onclick="limpiarTabla()">
+                    Limpiar Tabla
+                </button>
+            </div>
+            <div class="col">
+                <button type="button" class="btn btn-success" onclick="generarPDF()">
+                    Generar PDF
+                </button>
+            </div>
+        </div>
+
+
+
+            <div class="contenedor-tabla">
+                <table id="horariosTabla" class="table table-primary table-striped-columns">
+                    <thead>
+                        <tr>
+                            <th scope="col">#</th>
+                            <th scope="col" data-dia="lunes">Lunes</th>
+                            <th scope="col" data-dia="martes">Martes</th>
+                            <th scope="col" data-dia="miercoles">Miércoles</th>
+                            <th scope="col" data-dia="jueves">Jueves</th>
+                            <th scope="col" data-dia="viernes">Viernes</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        <tr>
+                            <th scope="row">8:31-9:10</th>
+                            <td id="Lunes1"></td>
+                            <td id="Martes1"></td>
+                            <td id="Miércoles1"></td>
+                            <td id="Jueves1"></td>
+                            <td id="Viernes1"></td>
+                        </tr>
+                        <tr>
+                            <th scope="row">9:11-9:50</th>
+                            <td id="Lunes2"></td>
+                            <td id="Martes2"></td>
+                            <td id="Miércoles2"></td>
+                            <td id="Jueves2"></td>
+                            <td id="Viernes2"></td>
+                        </tr>                        <tr>
+                            <th scope="row">9:51-10:00</th>
+                            <td id="Lunes3"></td>
+                            <td id="Martes3"></td>
+                            <td id="Miércoles3"></td>
+                            <td id="Jueves3"></td>
+                            <td id="Viernes3"></td>
+                        </tr>
+                        <tr>
+                            <th scope="row">10:01-10:40</th>
+                            <td id="Lunes4"></td>
+                            <td id="Martes4"></td>
+                            <td id="Miércoles4"></td>
+                            <td id="Jueves4"></td>
+                            <td id="Viernes4"></td>
+                        </tr>
+                        <tr>
+                            <th scope="row">10:41-11:20</th>
+                            <td id="Lunes5"></td>
+                            <td id="Martes5"></td>
+                            <td id="Miércoles5"></td>
+                            <td id="Jueves5"></td>
+                            <td id="Viernes5"></td>
+                        </tr>
+                        <tr>
+                            <th scope="row">11:31-12:10</th>
+                            <td id="Lunes6"></td>
+                            <td id="Martes6"></td>
+                            <td id="Miércoles6"></td>
+                            <td id="Jueves6"></td>
+                            <td id="Viernes6"></td>
+                        </tr>
+                        <tr>
+                            <th scope="row">12:11-12:50</th>
+                            <td id="Lunes7"></td>
+                            <td id="Martes7"></td>
+                            <td id="Miércoles7"></td>
+                            <td id="Jueves7"></td>
+                            <td id="Viernes7"></td>
+                        </tr>
+                        <tr>
+                            <th scope="row">13:01-13:40</th>
+                            <td id="Lunes8"></td>
+                            <td id="Martes8"></td>
+                            <td id="Miércoles8"></td>
+                            <td id="Jueves8"></td>
+                            <td id="Viernes8"></td>
+                        </tr>
+                        <tr>
+                            <th scope="row">13:41-14:20</th>
+                            <td id="Lunes9"></td>
+                            <td id="Martes9"></td>
+                            <td id="Miércoles9"></td>
+                            <td id="Jueves9"></td>
+                            <td id="Viernes9"></td>
+                        </tr>
+                        <tr>
+                            <th scope="row">14:31-15:10</th>
+                            <td id="Lunes10"></td>
+                            <td id="Martes10"></td>
+                            <td id="Miércoles10"></td>
+                            <td id="Jueves10"></td>
+                            <td id="Viernes10"></td>
+                        </tr>
+                        <tr>
+                            <th scope="row">15:11-15:50</th>
+                            <td id="Lunes11"></td>
+                            <td id="Martes11"></td>
+                            <td id="Miércoles11"></td>
+                            <td id="Jueves11"></td>
+                            <td id="Viernes11"></td>
+                        </tr>
+                        <tr>
+                            <th scope="row">16:01-16:40</th>
+                            <td id="Lunes12"></td>
+                            <td id="Martes12"></td>
+                            <td id="Miércoles12"></td>
+                            <td id="Jueves12"></td>
+                            <td id="Viernes12"></td>
+                        </tr>
+                        <tr>
+                            <th scope="row">16:41-17:20</th>
+                            <td id="Lunes13"></td>
+                            <td id="Martes13"></td>
+                            <td id="Miércoles13"></td>
+                            <td id="Jueves13"></td>
+                            <td id="Viernes13"></td>
+                        </tr>
+                        <tr>
+                            <th scope="row">17:31-18:10</th>
+                            <td id="Lunes14"></td>
+                            <td id="Martes14"></td>
+                            <td id="Miércoles14"></td>
+                            <td id="Jueves14"></td>
+                            <td id="Viernes14"></td>
+                        </tr>
+                        <tr>
+                            <th scope="row">18:11-18:50</th>
+                            <td id="Lunes15"></td>
+                            <td id="Martes15"></td>
+                            <td id="Miércoles15"></td>
+                            <td id="Jueves15"></td>
+                            <td id="Viernes15"></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="d-flex flex-row flex-wrap" id="asignaturasGuardadas">
+                <!-- Aquí se mostrarán las asignaturas guardadas -->
+            </div>
+        
+
+
+        <!-- <div class="mb-4">
+            <h2 class="fs-5 fw-bold mb-4">Secciones agregadas</h2>
+            <ul class="list-group">
+                <li class="list-group-item">
+                    <div class="input-group">
+                        <div type="text" class="form-control" placeholder="Recipient's username"
+                            aria-label="Recipient's username" aria-describedby="button-addon2">
+                            Asignatura 1
+                        </div>
+                        <button class="btn btn-danger" type="button" id="button-addon2">
+                            Eliminar
+                        </button>
+                    </div>
+                </li>
+                <li class="list-group-item">
+                    <div class="input-group">
+                        <div type="text" class="form-control" placeholder="Recipient's username"
+                            aria-label="Recipient's username" aria-describedby="button-addon2">
+                            Asignatura 2
+                        </div>
+                        <button class="btn btn-danger" type="button" id="button-addon2">
+                            Eliminar
+                        </button>
+                    </div>
+                </li>
+                <li class="list-group-item">
+                    <div class="input-group">
+                        <div type="text" class="form-control" placeholder="Recipient's username"
+                            aria-label="Recipient's username" aria-describedby="button-addon2">
+                            Asignatura 3
+                        </div>
+                        <button class="btn btn-danger" type="button" id="button-addon2">
+                            Eliminar
+                        </button>
+                    </div>
+                </li>
+                <li class="list-group-item">
+                    <div class="input-group">
+                        <div type="text" class="form-control" placeholder="Recipient's username"
+                            aria-label="Recipient's username" aria-describedby="button-addon2">
+                            Asignatura 4
+                        </div>
+                        <button class="btn btn-danger" type="button" id="button-addon2">
+                            Eliminar
+                        </button>
+                    </div>
+                </li>
+            </ul>
+        </div> -->
+        
+        <!-- <div>
+            <h2 class="fs-5 fw-bold mb-4">Asignaturas Disponibles</h2>
+            <div class="d-flex flex-row flex-wrap" id="asignaturasGuardadas">
+            </div>
+        </div> -->
+
+
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz"
+        crossorigin="anonymous"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="script.js"></script>
+    <!-- <script src="script.js"></script> -->
+    <script src="test.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.0/xlsx.full.min.js"></script>
 </body>
 
