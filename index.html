@@ -17,6 +17,7 @@
 
         <hr class="my-2" width="45%" />
         <div class="row">
+            
             <div class="col">
                 <h2 class="fs-5 fw-bold mb-4">
                     1. Elige y carga el archivo .xlsx con tus horarios
@@ -36,6 +37,8 @@
                     </div>
                 </div>
             </div>
+
+            
 
             <div class="col">
                 <h2 class="fs-5 fw-bold mb-4">
@@ -87,13 +90,20 @@
             </div>
         </div>
 
+        <div id="asignaturasIngresadas"></div>
 
-
-            <div class="contenedor-tabla">
-                <table id="horariosTabla" class="table table-primary table-striped-columns">
+        <div class="row">
+            <div class="col">
+                <div class="d-flex flex-row flex-wrap" id="asignaturasGuardadas">
+                    <!-- Aquí se mostrarán las asignaturas guardadas -->
+                </div>
+            </div>
+            <div class="col">
+                        <div class="contenedor-tabla">
+                <table id="horariosTabla" class="table table-primary table-striped-columns table-hover table-bordered">
                     <thead>
                         <tr>
-                            <th scope="col">#</th>
+                            <th scope="col" id="horario">#</th>
                             <th scope="col" data-dia="lunes">Lunes</th>
                             <th scope="col" data-dia="martes">Martes</th>
                             <th scope="col" data-dia="miercoles">Miércoles</th>
@@ -224,11 +234,18 @@
                         </tr>
                     </tbody>
                 </table>
+        </div>
             </div>
+        </div>
+        <!-- Tabla a llenar -->
 
-            <div class="d-flex flex-row flex-wrap" id="asignaturasGuardadas">
-                <!-- Aquí se mostrarán las asignaturas guardadas -->
-            </div>
+
+
+
+
+            
+
+
         
 
 

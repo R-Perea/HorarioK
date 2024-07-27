@@ -2,31 +2,61 @@
 .card {
     display: flex;
     flex-direction: column;
-    margin: 2px; /* Agregar un pequeño margen entre las cards */
+    margin: 10px; /* Agregar un pequeño margen entre las cards */
 }
+
+.card-title{
+    margin: 5px;
+    
+}
+
+.card-text:last-child {
+    margin: 10px;
+  }
 
 .buttons-container {
     display: flex;
     justify-content: center;
     align-items: center;
-  }
-
-#horariosTabla td, #horariosTabla th {
-    width: fit-content; /* Cambia esto al ancho que desees */
-    height: 40px; /* Cambia esto a la altura que desees */
-    overflow: auto; /* Esto hará que el contenido que no quepa en la celda se pueda desplazar */
 }
+
+
+
+
+
+#horario{
+    width:25px !important; 
+}
+
+
+#horariosTabla td, #horariosTabla th  {
+    width: 17%; /* Cambia esto al ancho que desees */
+    height: 10px; /* Cambia esto a la altura que desees */
+    overflow: auto; /* Esto hará que el contenido que no quepa en la celda se pueda desplazar */
+    
+    
+}
+
+#asignaturasGuardadas{
+    overflow: auto;
+    height: 750px;
+}
+
+
 
 
 
 .titulo-seccion {
-    font-size: 24px; /* Cambia esto al tamaño que desees */
+    font-size: 15px; /* Cambia esto al tamaño que desees */
+    text-align: center;
 }
 
 .card-largo {
-    width: 300px; /* Cambia esto al largo que desees */
+    width: 155px; /* Cambia esto al largo que desees */
 }
 .flex-container {
     display: flex;
     flex-wrap: wrap;
-  }
+    margin: 10px;
+    justify-content: center;
+}

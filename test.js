@@ -286,7 +286,7 @@ function cargarCards(toLoad){
     Object.keys(grouped).sort().forEach(seccion => {
       const section = document.createElement("section");
       asignaturaDiv.appendChild(section);
-      section.innerHTML = `<h2 class="titulo-seccion">Sección: ${seccion}</h2>`;
+      section.innerHTML = `<h2 class="titulo-seccion">Sección:<br>${seccion}</h2>`;
       section.classList.add('section');
   
       const button = document.createElement("button");
@@ -313,12 +313,13 @@ function cargarCards(toLoad){
         const diaAbreviado = diasMap[asignatura.Horario.substring(0, 2)];
     
         let contenidoTarjeta = `
-          <h5 class="card-title">${asignatura.Asignatura}</h5>
+          <h6 class="card-title">${asignatura.Asignatura}</h6>
           <p class="card-text">
+              Día: ${diaAbreviado}<br>
               Horario: ${horarioSinEspacios}<br>
               Sala: ${asignatura.Sala}<br>
               Profesor: ${asignatura.Docente}<br>
-              Día: ${diaAbreviado}<br>
+              
           </p>
         `;
         card.innerHTML = contenidoTarjeta;
@@ -327,63 +328,146 @@ function cargarCards(toLoad){
   });
 }
 
-//Insertar los datos en la tabla
+// Insertar los datos en la tabla
+// function insertarDatosEnTabla(seccion, grouped) {
+//   const asignaturas = grouped[seccion];
+
+//   for (let i = 0; i < asignaturas.length; i++) {
+//       const asignatura = asignaturas[i];
+//       const horarioSinEspacios = asignatura.Horario !== "Online" ? asignatura.Horario.substring(3) : asignatura.Horario;
+//       console.log(`Horario sin espacios: ${horarioSinEspacios}`);
+      
+      
+//       const diaAbreviado = diasMap[asignatura.Horario.substring(0, 2)];
+//       console.log(`Día abreviado: ${diaAbreviado}`);
+
+
+//       const filas = calcularFilaPorHorario(horarioSinEspacios);
+//       console.log(`Filas calculadas: ${JSON.stringify(filas)}`);
+
+
+
+//       if (filas === null) {
+//         console.error(`El horario ${horarioSinEspacios} no se encuentra en el rango de horarios.`);
+//         continue; // Pasar a la siguiente asignatura
+//       }
+
+//       console.log(asignatura);
+//       console.log(`Asignatura: ${asignatura.Asignatura}, Horario: ${horarioSinEspacios},Dia: ${diaAbreviado}, Filas: ${JSON.stringify(filas)}`);
+
+
+//       if (filas === null) {
+//           alert('El horario está fuera del rango especificado. No se puede agregar la asignatura en este horario.');
+//           return false;
+//       }
+
+//       for (let fila = filas.inicio; fila <= filas.fin; fila++) {
+//           const cell = document.getElementById(`${diaAbreviado}${fila}`);
+//           if (cell === null) {
+//               alert('Error al insertar los datos. La celda no existe.');
+//               return false;
+//           }
+
+//           if (cell.textContent.trim() !== '') {
+//               alert('Horario ocupado. No se puede agregar la asignatura en este horario.');
+//               return false;
+//           } else {
+//               cell.textContent = `${asignatura.Asignatura}\n${seccion}\n${asignatura.Sala}`;
+//               document.querySelectorAll(`.${asignatura.Asignatura.replace(/\s/g, '')}`).forEach(card => {
+//                   card.style.display = 'none';
+//               });
+//               document.querySelectorAll(`.section`).forEach(section => {
+//                   if (section.querySelector(`h2`).textContent === `Sección: ${seccion}`) {
+//                       section.style.display = 'none';
+//                   }
+//               });
+//           }
+//       }
+//   }
+//   return true;
+// }
+
 function insertarDatosEnTabla(seccion, grouped) {
   const asignaturas = grouped[seccion];
+  let todasLasCeldasDisponibles = true;
 
-  for (let i = 0; i < asignaturas.length; i++) {
-      const asignatura = asignaturas[i];
-      const horarioSinEspacios = asignatura.Horario !== "Online" ? asignatura.Horario.substring(3) : asignatura.Horario;
-      console.log(`Horario sin espacios: ${horarioSinEspacios}`);
-      
-      
-      const diaAbreviado = diasMap[asignatura.Horario.substring(0, 2)];
-      console.log(`Día abreviado: ${diaAbreviado}`);
+  // Verificar disponibilidad de celdas antes de realizar la inserción
+  for (const asignatura of asignaturas) {
+    if (asignatura.Horario === "Online") {
+      // Ignorar asignaturas con horario "Online"
+      continue;
+    }
+    
+    const horarioSinEspacios = asignatura.Horario.substring(3); // Eliminar "Hora:" si es necesario
+    const diaAbreviado = diasMap[asignatura.Horario.substring(0, 2)];
+    const filas = calcularFilaPorHorario(horarioSinEspacios);
 
+    if (!filas) {
+      console.error(`El horario ${horarioSinEspacios} no se encuentra en el rango de horarios.`);
+      todasLasCeldasDisponibles = false;
+      continue;
+    }
 
-      const filas = calcularFilaPorHorario(horarioSinEspacios);
-      console.log(`Filas calculadas: ${JSON.stringify(filas)}`);
-
-
-
-      if (filas === null) {
-        console.error(`El horario ${horarioSinEspacios} no se encuentra en el rango de horarios.`);
-        continue; // Pasar a la siguiente asignatura
+    // Verificar si todas las celdas en el rango están vacías
+    for (let fila = filas.inicio; fila <= filas.fin; fila++) {
+      const cell = document.getElementById(`${diaAbreviado}${fila}`);
+      if (cell && cell.textContent.trim() !== '') {
+        alert(`No se puede insertar la asignatura ${asignatura.Asignatura}. Horario ${diaAbreviado}${asignatura.Horario} está ocupada.`);
+        todasLasCeldasDisponibles = false;
+        break; // Salir del bucle si una celda está ocupada
       }
+    }
 
-      console.log(asignatura);
-      console.log(`Asignatura: ${asignatura.Asignatura}, Horario: ${horarioSinEspacios},Dia: ${diaAbreviado}, Filas: ${JSON.stringify(filas)}`);
+    // Si se encontró una celda ocupada, no es necesario seguir verificando para esta asignatura
+    if (!todasLasCeldasDisponibles) {
+      break;
+    }
+  }
 
+  // Insertar datos en la tabla si todas las celdas están disponibles
+  if (todasLasCeldasDisponibles) {
+    for (const asignatura of asignaturas) {
+      if (asignatura.Horario === "Online") {
+        // Ignorar asignaturas con horario "Online"
+        continue;
+      }
+      
+      const horarioSinEspacios = asignatura.Horario.substring(3); // Eliminar "Hora:" si es necesario
+      const diaAbreviado = diasMap[asignatura.Horario.substring(0, 2)];
+      const filas = calcularFilaPorHorario(horarioSinEspacios);
 
-      if (filas === null) {
-          alert('El horario está fuera del rango especificado. No se puede agregar la asignatura en este horario.');
-          return false;
+      if (!filas) {
+        continue; // Si no se puede calcular filas, saltar a la siguiente asignatura
       }
 
       for (let fila = filas.inicio; fila <= filas.fin; fila++) {
-          const cell = document.getElementById(`${diaAbreviado}${fila}`);
-          if (cell === null) {
-              alert('Error al insertar los datos. La celda no existe.');
-              return false;
-          }
-
-          if (cell.textContent.trim() !== '') {
-              alert('Horario ocupado. No se puede agregar la asignatura en este horario.');
-              return false;
-          } else {
-              cell.textContent = `${asignatura.Asignatura}\n${seccion}\n${asignatura.Sala}`;
-              document.querySelectorAll(`.${asignatura.Asignatura.replace(/\s/g, '')}`).forEach(card => {
-                  card.style.display = 'none';
-              });
-              document.querySelectorAll(`.section`).forEach(section => {
-                  if (section.querySelector(`h2`).textContent === `Sección: ${seccion}`) {
-                      section.style.display = 'none';
-                  }
-              });
-          }
+        const cell = document.getElementById(`${diaAbreviado}${fila}`);
+        if (cell) {
+          // cell.textContent = `${asignatura.Asignatura}\n${seccion}\n${asignatura.Sala}`;
+          cell.textContent = `${seccion}`;
+        }
       }
+
+      // Ocultar las cards correspondientes a la asignatura
+      document.querySelectorAll(`.${asignatura.Asignatura.replace(/\s/g, '')}`).forEach(card => {
+        card.style.display = 'none';
+      });
+
+      // Ocultar la sección correspondiente
+      document.querySelectorAll('.section').forEach(section => {
+        if (section.querySelector('h2').textContent === `Sección: ${seccion}`) {
+          section.style.display = 'none';
+        }
+      });
+      
+    }
+    
+  } else {
+    console.log('No se pudo insertar ninguna asignatura debido a celdas ocupadas.');
   }
-  return true;
+
+  return todasLasCeldasDisponibles;
+  
 }
 
 
