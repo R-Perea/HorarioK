@@ -387,6 +387,27 @@ function cargarCards(toLoad){
 //   return true;
 // }
 
+let seccionesIngresadas = [];
+
+// Función para actualizar el div con las secciones ingresadas
+function actualizarListaSecciones() {
+    const div = document.getElementById('seccionesIngresadas');
+    div.innerHTML = ''; // Limpia el contenido anterior
+    seccionesIngresadas.forEach(seccionInfo => {
+        const p = document.createElement('p');
+        p.textContent = seccionInfo; // Sección con Docente
+        div.appendChild(p);
+    });
+}
+
+function eliminarSeccion(contenidoCompleto) {
+  const seccionSinDocente = contenidoCompleto.split('\n')[0]; // Obtener solo la sección
+  seccionesIngresadas = seccionesIngresadas.filter(seccionInfo => {
+      return !seccionInfo.startsWith(seccionSinDocente);
+  });
+  actualizarListaSecciones();
+}
+
 function insertarDatosEnTabla(seccion, grouped) {
   const asignaturas = grouped[seccion];
   let todasLasCeldasDisponibles = true;
@@ -444,7 +465,7 @@ function insertarDatosEnTabla(seccion, grouped) {
         const cell = document.getElementById(`${diaAbreviado}${fila}`);
         if (cell) {
           // cell.textContent = `${asignatura.Asignatura}\n${seccion}\n${asignatura.Sala}`;
-          cell.textContent = `${seccion}`;
+          cell.textContent = `${seccion}\n${asignatura.Docente}`;
         }
       }
 
@@ -462,6 +483,11 @@ function insertarDatosEnTabla(seccion, grouped) {
       
     }
     
+    
+    if (!seccionesIngresadas.includes(seccion)) {
+      seccionesIngresadas.push(seccion);
+      actualizarListaSecciones();
+    }
   } else {
     console.log('No se pudo insertar ninguna asignatura debido a celdas ocupadas.');
   }
@@ -483,4 +509,42 @@ function filterasignatura(carrera, nivel, jornada){
     }
   });
   cargarCards(asignaturasfilter);
+}
+
+
+document.addEventListener('DOMContentLoaded', (event) => {
+  // Selecciona todas las celdas de la tabla (excepto las de cabecera)
+  const celdas = document.querySelectorAll('#horariosTabla tbody td');
+  const seccionesInsertadasDiv = document.getElementById('seccionesIngresadas');
+
+  // Itera sobre cada celda y agrega un event listener
+  celdas.forEach(celda => {
+    celda.addEventListener('click', function (e) {
+      const contenido = this.textContent.trim();
+      
+
+
+      if (contenido !== '') {
+        // Buscar todas las celdas con el mismo contenido
+        celdas.forEach(c => {
+          if (c.textContent.trim() === contenido) {
+            c.textContent = ' ';
+          }
+        });
+        
+        eliminarSeccion(contenido);
+        alert(`Se elimino asignatura "${contenido}"`);
+      } else {
+        alert('La celda está vacía');
+      }
+    });
+  });
+});
+
+function agregarSeccion(seccion, docente) {
+  const seccionConDocente = `${seccion}\n${docente}`;
+  if (!seccionesIngresadas.includes(seccionConDocente)) {
+      seccionesIngresadas.push(seccionConDocente);
+      actualizarListaSecciones();
+  }
 }

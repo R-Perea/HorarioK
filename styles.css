@@ -33,7 +33,7 @@
     width: 17%; /* Cambia esto al ancho que desees */
     height: 10px; /* Cambia esto a la altura que desees */
     overflow: auto; /* Esto hará que el contenido que no quepa en la celda se pueda desplazar */
-    
+    cursor: pointer;
     
 }
 
